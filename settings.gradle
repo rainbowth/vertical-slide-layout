@@ -1,1 +1,1 @@
-include ':app', ':verticalslide'
+include ':verticalslide', ':app'

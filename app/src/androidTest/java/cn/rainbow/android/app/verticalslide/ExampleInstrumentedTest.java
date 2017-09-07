@@ -1,4 +1,4 @@
-package cn.rainbow.android.widget.verticalslide;
+package cn.rainbow.android.app.verticalslide;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("cn.rainbow.android.widget.verticalslide", appContext.getPackageName());
+        assertEquals("cn.rainbow.android.app.verticalslide", appContext.getPackageName());
     }
 }

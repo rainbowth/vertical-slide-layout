@@ -1,4 +1,4 @@
-package cn.rainbow.android.widget.verticalslide;
+package cn.rainbow.android.app.verticalslide;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

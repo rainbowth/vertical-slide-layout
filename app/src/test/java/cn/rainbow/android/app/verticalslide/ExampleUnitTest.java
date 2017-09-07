@@ -1,4 +1,4 @@
-package cn.rainbow.android.widget.verticalslide;
+package cn.rainbow.android.app.verticalslide;
 
 import org.junit.Test;
 
