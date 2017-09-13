@@ -90,6 +90,9 @@ public class VerticalSlideLayout extends ViewGroup {
                     Log.d(TAG, "onTouchEvent: 释放 ");
                     mFirstChildTop = -mLastChildTop;//让最后一个child置顶
                     requestLayout();
+                }else {
+                    mFirstChildTop = 0;
+                    requestLayout();
                 }
                 break;
         }
