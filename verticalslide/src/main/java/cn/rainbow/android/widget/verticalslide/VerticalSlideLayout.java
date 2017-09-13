@@ -1,6 +1,7 @@
 package cn.rainbow.android.widget.verticalslide;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -42,7 +43,8 @@ public class VerticalSlideLayout extends ViewGroup {
         int childTop = t + (int) mMovedOffset;
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
-            child.layout(l, childTop, r, b);
+            Log.d(TAG, "onLayout: " + childTop + "," + b);
+            child.layout(l, childTop, r, childTop + child.getMeasuredHeight());
             childTop += child.getMeasuredHeight();
         }
     }
