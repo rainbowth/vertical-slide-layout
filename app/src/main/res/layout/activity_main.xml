@@ -7,11 +7,18 @@
     android:layout_height="match_parent"
     tools:context="cn.rainbow.android.app.verticalslide.MainActivity">
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
-        android:text="第一页"/>
+        android:background="@color/colorAccent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#654"
+            android:text="@string/text"/>
+
+    </ScrollView>
 
     <TextView
         android:layout_width="wrap_content"

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 /**
  * Created by bvin on 2017/9/7.
@@ -66,14 +67,45 @@ public class VerticalSlideLayout extends ViewGroup {
             case MotionEvent.ACTION_MOVE:
                 Log.d(TAG, "onInterceptTouchEvent-ACTION_MOVE: ");
                 float currentY = ev.getY();
-                if (currentY - mInitialDownY > mTouchSlop) {
+                float diffY = currentY - mInitialDownY;
+                View view = getChildAt(0);
+                if (isFingerScrollingUp(diffY)) {//向上滑动
+                    if (ViewCompat.canScrollVertically(view, -(int) diffY)) {
+                        Log.d(TAG, "是否能向上滚动: yes");
+                        mIsBeingDragged = false;
+                    }else {
+                        //滑动到底部了，拦截子控件的事件，转由自己处理，去滚动到下一个View
+                        Log.d(TAG, "onInterceptTouchEvent: no");
+                        Toast.makeText(getContext(), "已经滑动到底部了", Toast.LENGTH_SHORT).show();
+                        mIsBeingDragged = true;
+                    }
+                }
+                /*if (diffY > mTouchSlop) {
                     mInitialMotionY = mInitialDownY + mTouchSlop;
                     Log.d(TAG, "onInterceptTouchEvent: 满足事件拦截条件");
                     mIsBeingDragged = true;
-                }
+                }*/
                 break;
         }
         return mIsBeingDragged;
+    }
+
+    /**
+     * 手指是否向上滑动
+     * @param verticalMoved
+     * @return
+     */
+    private boolean isFingerScrollingUp(float verticalMoved){
+        return verticalMoved < 0;
+    }
+
+    /**
+     * 手指是否乡下滑动
+     * @param verticalMoved
+     * @return
+     */
+    private boolean isFingerScrollingDown(float verticalMoved){
+        return verticalMoved > 0;
     }
 
     @Override
