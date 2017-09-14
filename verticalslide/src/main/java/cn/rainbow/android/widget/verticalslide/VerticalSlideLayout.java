@@ -1,6 +1,7 @@
 package cn.rainbow.android.widget.verticalslide;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -59,8 +60,11 @@ public class VerticalSlideLayout extends ViewGroup {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mInitialDownY = ev.getY();
+                Log.d(TAG, "onInterceptTouchEvent-ACTION_DOWN: " + mInitialDownY);
+                mIsBeingDragged = false;
                 break;
             case MotionEvent.ACTION_MOVE:
+                Log.d(TAG, "onInterceptTouchEvent-ACTION_MOVE: ");
                 float currentY = ev.getY();
                 if (currentY - mInitialDownY > mTouchSlop) {
                     mInitialMotionY = mInitialDownY + mTouchSlop;
@@ -75,15 +79,29 @@ public class VerticalSlideLayout extends ViewGroup {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.d(TAG, "onTouchEvent: " + event.getAction());
+        boolean consume = false;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                consume = true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 final float y = event.getY();
+                Log.d(TAG, "onTouchEvent-ACTION_MOVE: "+y);
+                mInitialMotionY = mInitialDownY;
                 mMovedOffset = y - mInitialMotionY;
                 mFirstChildTop = (int) mMovedOffset;
                 Log.d(TAG, "onTouchEvent: 移动距离 " + mMovedOffset);
-                requestLayout();
+                if (mMovedOffset > 0) {//还有下一个View&&往下滑动
+                    View view = getChildAt(0);//第一个View(当前View)
+                    if (ViewCompat.canScrollVertically(view, -(int) mMovedOffset)){//是否能往上滚动
+                        //requestLayout();
+                    }else {
+                        Log.d(TAG, "onTouchEvent: 往上滑动但无法往上滑动了");
+                    }
+                }else {//往上滑动
+                    requestLayout();
+                }
+                consume = false;
                 break;
             case MotionEvent.ACTION_UP:
                 if (mMovedOffset < -300) {
@@ -94,8 +112,9 @@ public class VerticalSlideLayout extends ViewGroup {
                     mFirstChildTop = 0;
                     requestLayout();
                 }
+                consume = true;
                 break;
         }
-        return true;
+        return consume;
     }
 }
