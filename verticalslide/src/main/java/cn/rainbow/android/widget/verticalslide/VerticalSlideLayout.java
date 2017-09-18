@@ -48,8 +48,8 @@ public class VerticalSlideLayout extends ViewGroup {
             if (mMovedOffset == 0) mLastChildTop = childTop;//记录第一次layout后，最后一个child的Top
             View child = getChildAt(i);
             int childBottom = childTop + child.getMeasuredHeight();
-            Log.d(TAG, "onLayout: " + childTop + "," + childBottom);
-            child.layout(l, childTop, r, childBottom);
+            //若要支持gravity的话需要从新定位left和right
+            child.layout(l, childTop, child.getMeasuredWidth(), childBottom);
             childTop += child.getMeasuredHeight();
         }
     }
@@ -74,21 +74,39 @@ public class VerticalSlideLayout extends ViewGroup {
                         Log.d(TAG, "子View还可以往下滚动");
                         mIsBeingDragged = false;
                     }else {
+                        View lastView = getChildAt(getChildCount() - 1);
+                        if (lastView.getTop() == 0) {//当前页是最后一页
+                            if (ViewCompat.canScrollVertically(lastView, -(int) diffY)) {//最后一页的内容是否能够向下滚动
+                                Log.d(TAG, "lastView可以往下滚动");
+                                mIsBeingDragged = false;
+                                break;
+                            }
+                        }
                         //滑动到底部了，拦截子控件的事件，转由自己处理，去滚动到下一个View
                         Log.d(TAG, "子View无法往下滚动");
                         Toast.makeText(getContext(), "已经滑动到底部了", Toast.LENGTH_SHORT).show();
                         mIsBeingDragged = true;
                     }
-                }/*else if (isFingerScrollingDown(diffY)){//向下滑动
-                    if (diffY > mTouchSlop) {
-                        mInitialMotionY = mInitialDownY + mTouchSlop;
+                }else if (isFingerScrollingDown(diffY)){//向下滑动
+                    //if (diffY > mTouchSlop) {
+                        /*mInitialMotionY = mInitialDownY + mTouchSlop;
                         Log.d(TAG, "onInterceptTouchEvent: 满足事件拦截条件");
-                        mIsBeingDragged = true;
-                    }else {
+                        mIsBeingDragged = true;*/
+
+                        View lastView = getChildAt(getChildCount() - 1);
+                        if (lastView.getTop() == 0) {//当前页是最后一页
+                            if (ViewCompat.canScrollVertically(lastView, -(int) diffY)){
+                                Log.d(TAG, "lastView已经滑动到顶部部了");
+                                mIsBeingDragged = false;
+                            }else {
+                                mIsBeingDragged = true;
+                            }
+                        }
+                    /*}else {
                         Log.d(TAG, "onInterceptTouchEvent: 未满足事件拦截条件");
                         mIsBeingDragged = false;
-                    }
-                }*/
+                    }*/
+                }
 
                 break;
         }

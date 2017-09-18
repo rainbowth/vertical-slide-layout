@@ -20,10 +20,16 @@
 
     </ScrollView>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:text="Hello World!"/>
+        android:background="@color/colorAccent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/text2"/>
+    </ScrollView>
+
 
 </cn.rainbow.android.widget.verticalslide.VerticalSlideLayout>
