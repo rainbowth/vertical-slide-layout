@@ -144,6 +144,18 @@ public class VerticalSlideLayout extends ViewGroup {
                     if (mMovedOffset > -mTouchSlop){
                         consume = false;
                         break;
+                    }else {
+                        if (getChildCount()>1){
+                            View lastView = getChildAt(getChildCount()-1);
+                            if (lastView.getTop()==0){//当前最后一页
+                                if (ViewCompat.canScrollVertically(lastView, -(int) mMovedOffset)){//是否能向下滚动
+
+                                }else {//最后一个view不用滚动
+                                    consume = false;
+                                    break;
+                                }
+                            }
+                        }
                     }
                     requestLayout();
                 }else {
@@ -151,7 +163,11 @@ public class VerticalSlideLayout extends ViewGroup {
                 }
                 consume = false;
                 break;
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_UP://释放
+                if (mMovedOffset==0){
+                    consume = false;
+                    break;
+                }
                 if (mMovedOffset < -300) {
                     Log.d(TAG, "onTouchEvent: 释放 ");
                     mFirstChildTop = -mLastChildTop;//让最后一个child置顶
@@ -159,6 +175,21 @@ public class VerticalSlideLayout extends ViewGroup {
                 }else if (mMovedOffset > 300){
                     mFirstChildTop = 0;
                     requestLayout();
+                }else {
+                    if (isFingerScrollingDown(mMovedOffset)){//当前页最后一页并试图向下滑动
+                        View lastView = getChildAt(getChildCount()-1);
+                        if (lastView.getTop()>= 0){//当前页是最后一页
+                            mFirstChildTop = -mLastChildTop;//让最后一个child置顶
+                            requestLayout();
+                        }
+                    }else if(isFingerScrollingUp(mMovedOffset)){//向上滑动，还有下一页
+                        View lastView = getChildAt(getChildCount()-1);
+                        if (lastView.getTop()> 0){
+                            mFirstChildTop = 0;
+                            requestLayout();
+                        }
+                    }
+
                 }
                 consume = true;
                 break;
