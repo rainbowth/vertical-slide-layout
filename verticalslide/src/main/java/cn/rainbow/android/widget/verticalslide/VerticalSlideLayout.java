@@ -79,6 +79,8 @@ public class VerticalSlideLayout extends ViewGroup {
                         Toast.makeText(getContext(), "已经滑动到底部了", Toast.LENGTH_SHORT).show();
                         mIsBeingDragged = true;
                     }
+                }else if (isFingerScrollingUp(diffY)){//向下滑动
+
                 }
                 /*if (diffY > mTouchSlop) {
                     mInitialMotionY = mInitialDownY + mTouchSlop;
@@ -126,7 +128,8 @@ public class VerticalSlideLayout extends ViewGroup {
                 if (mMovedOffset > 0) {//还有下一个View&&往下滑动
                     View view = getChildAt(0);//第一个View(当前View)
                     if (ViewCompat.canScrollVertically(view, -(int) mMovedOffset)){//是否能往上滚动
-                        //requestLayout();
+                        mFirstChildTop  = (int) (mMovedOffset-view.getMeasuredHeight());
+                        requestLayout();
                     }else {
                         Log.d(TAG, "onTouchEvent: 往上滑动但无法往上滑动了");
                     }
@@ -140,7 +143,7 @@ public class VerticalSlideLayout extends ViewGroup {
                     Log.d(TAG, "onTouchEvent: 释放 ");
                     mFirstChildTop = -mLastChildTop;//让最后一个child置顶
                     requestLayout();
-                }else {
+                }else if (mMovedOffset > 300){
                     mFirstChildTop = 0;
                     requestLayout();
                 }
