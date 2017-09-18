@@ -164,6 +164,8 @@ public class VerticalSlideLayout extends ViewGroup {
                 consume = false;
                 break;
             case MotionEvent.ACTION_UP://释放
+                /// 试图滑动到下一页并且还有下一页，未滑过阈值的取消，滑过阈值的自动切换到下一页
+                /// 视图滑动到上一页并且不在第一页，当滑动的距离往负方向未超过阈值的取消切换，超过的自动切换到上一页
                 if (mMovedOffset==0){
                     consume = false;
                     break;
