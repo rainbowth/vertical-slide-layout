@@ -79,14 +79,17 @@ public class VerticalSlideLayout extends ViewGroup {
                         Toast.makeText(getContext(), "已经滑动到底部了", Toast.LENGTH_SHORT).show();
                         mIsBeingDragged = true;
                     }
-                }else if (isFingerScrollingUp(diffY)){//向下滑动
-
-                }
-                /*if (diffY > mTouchSlop) {
-                    mInitialMotionY = mInitialDownY + mTouchSlop;
-                    Log.d(TAG, "onInterceptTouchEvent: 满足事件拦截条件");
-                    mIsBeingDragged = true;
+                }/*else if (isFingerScrollingDown(diffY)){//向下滑动
+                    if (diffY > mTouchSlop) {
+                        mInitialMotionY = mInitialDownY + mTouchSlop;
+                        Log.d(TAG, "onInterceptTouchEvent: 满足事件拦截条件");
+                        mIsBeingDragged = true;
+                    }else {
+                        Log.d(TAG, "onInterceptTouchEvent: 未满足事件拦截条件");
+                        mIsBeingDragged = false;
+                    }
                 }*/
+
                 break;
         }
         return mIsBeingDragged;
@@ -125,7 +128,11 @@ public class VerticalSlideLayout extends ViewGroup {
                 mMovedOffset = y - mInitialMotionY;
                 mFirstChildTop = (int) mMovedOffset;
                 Log.d(TAG, "onTouchEvent: 移动距离 " + mMovedOffset);
-                if (mMovedOffset > 0) {//还有下一个View&&往下滑动
+                if (isFingerScrollingDown(mMovedOffset)) {//还有下一个View&&往下滑动
+                    if (mMovedOffset < mTouchSlop){
+                        consume = false;
+                        break;
+                    }
                     View view = getChildAt(0);//第一个View(当前View)
                     if (ViewCompat.canScrollVertically(view, -(int) mMovedOffset)){//是否能往上滚动
                         mFirstChildTop  = (int) (mMovedOffset-view.getMeasuredHeight());
@@ -133,8 +140,14 @@ public class VerticalSlideLayout extends ViewGroup {
                     }else {
                         Log.d(TAG, "onTouchEvent: 往上滑动但无法往上滑动了");
                     }
-                }else {//往上滑动
+                }else if(isFingerScrollingUp(mMovedOffset)){//往上滑动
+                    if (mMovedOffset > -mTouchSlop){
+                        consume = false;
+                        break;
+                    }
                     requestLayout();
+                }else {
+
                 }
                 consume = false;
                 break;
