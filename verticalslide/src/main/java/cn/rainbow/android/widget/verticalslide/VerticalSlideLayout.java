@@ -1,13 +1,16 @@
 package cn.rainbow.android.widget.verticalslide;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 /**
@@ -75,8 +78,20 @@ public class VerticalSlideLayout extends ViewGroup {
                         mIsBeingDragged = false;
                     }else {
                         View lastView = getChildAt(getChildCount() - 1);
+                        View scrollView = lastView;
+                        if (lastView instanceof ViewPager){
+                            View firstView = ((ViewPager) lastView).getChildAt(0);
+                            View currentItemView;
+                            int currentItem = ((ViewPager) lastView).getCurrentItem();
+                            if (firstView instanceof TabLayout){//如果第一个是TabLayout
+                                currentItemView = ((ViewPager) lastView).getChildAt(currentItem+1);
+                            }else {
+                                currentItemView = ((ViewPager) lastView).getChildAt(currentItem);
+                            }
+                            scrollView = currentItemView;
+                        }
                         if (lastView.getTop() == 0) {//当前页是最后一页
-                            if (ViewCompat.canScrollVertically(lastView, -(int) diffY)) {//最后一页的内容是否能够向下滚动
+                            if (ViewCompat.canScrollVertically(scrollView, -(int) diffY)) {//最后一页的内容是否能够向下滚动
                                 Log.d(TAG, "lastView可以往下滚动");
                                 mIsBeingDragged = false;
                                 break;

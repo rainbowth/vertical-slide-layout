@@ -46,4 +46,7 @@
 基本上，抓住这五点，这个自定义ViewGroup的事件处理基本就搞定了。接下来就是代码实现啦。重写onI重写onInterceptTouchEvent方法去决定啥时候要拦截事件，重写onTouchEvent方法去在ViewGroup要拦截的时候确定到底怎么使用这个事件。
 
 总体来说，还是很简单的一个自定义View，实现起来也不难。当然实现的过程中也</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
