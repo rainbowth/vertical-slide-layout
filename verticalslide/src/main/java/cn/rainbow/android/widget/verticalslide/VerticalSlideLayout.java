@@ -78,18 +78,7 @@ public class VerticalSlideLayout extends ViewGroup {
                         mIsBeingDragged = false;
                     }else {
                         View lastView = getChildAt(getChildCount() - 1);
-                        View scrollView = lastView;
-                        if (lastView instanceof ViewPager){
-                            View firstView = ((ViewPager) lastView).getChildAt(0);
-                            View currentItemView;
-                            int currentItem = ((ViewPager) lastView).getCurrentItem();
-                            if (firstView instanceof TabLayout){//如果第一个是TabLayout
-                                currentItemView = ((ViewPager) lastView).getChildAt(currentItem+1);
-                            }else {
-                                currentItemView = ((ViewPager) lastView).getChildAt(currentItem);
-                            }
-                            scrollView = currentItemView;
-                        }
+                        View scrollView = getCurrentScrollView(lastView);
                         if (lastView.getTop() == 0) {//当前页是最后一页
                             if (ViewCompat.canScrollVertically(scrollView, -(int) diffY)) {//最后一页的内容是否能够向下滚动
                                 Log.d(TAG, "lastView可以往下滚动");
@@ -108,8 +97,9 @@ public class VerticalSlideLayout extends ViewGroup {
                         mIsBeingDragged = true;*/
 
                         View lastView = getChildAt(getChildCount() - 1);
+                        View scrollView = getCurrentScrollView(lastView);
                         if (lastView.getTop() == 0) {//当前页是最后一页
-                            if (ViewCompat.canScrollVertically(lastView, -(int) diffY)){
+                            if (ViewCompat.canScrollVertically(scrollView, -(int) diffY)){
                                 Log.d(TAG, "lastView已经滑动到顶部部了");
                                 mIsBeingDragged = false;
                             }else {
@@ -125,6 +115,21 @@ public class VerticalSlideLayout extends ViewGroup {
                 break;
         }
         return mIsBeingDragged;
+    }
+
+    private View getCurrentScrollView(View parent) {
+        if (parent instanceof ViewPager) {
+            View firstView = ((ViewPager) parent).getChildAt(0);
+            View currentItemView;
+            int currentItem = ((ViewPager) parent).getCurrentItem();
+            if (firstView instanceof TabLayout) {//如果第一个是TabLayout
+                currentItemView = ((ViewPager) parent).getChildAt(currentItem + 1);
+            } else {
+                currentItemView = ((ViewPager) parent).getChildAt(currentItem);
+            }
+            return currentItemView;
+        }
+        return parent;
     }
 
     /**
