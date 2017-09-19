@@ -22,6 +22,7 @@ public class VerticalSlideLayout extends ViewGroup {
     private static final String TAG = "VerticalSlideLayout";
 
     private final int mTouchSlop;
+    private float mInitialDownX;
     private float mInitialDownY;
     private float mInitialMotionY;
     private float mMovedOffset;
@@ -63,24 +64,33 @@ public class VerticalSlideLayout extends ViewGroup {
         boolean mIsBeingDragged = super.onInterceptTouchEvent(ev);
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                mInitialDownX = ev.getX();
                 mInitialDownY = ev.getY();
                 Log.d(TAG, "onInterceptTouchEvent-ACTION_DOWN: " + mInitialDownY);
                 mIsBeingDragged = false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.d(TAG, "onInterceptTouchEvent-ACTION_MOVE: ");
+                float currentX = ev.getX();
                 float currentY = ev.getY();
-                float diffY = currentY - mInitialDownY;
+                final float xDiff = Math.abs(currentX - mInitialDownX);
+                float dY = currentY - mInitialDownY;
+                float yDiff = Math.abs(dY);
+                if (xDiff * 0.5f > yDiff && xDiff > mTouchSlop) {//表示水平方向的滑动
+                    Log.d(TAG, "水平方向滑动不拦截事件");
+                    mIsBeingDragged = false;
+                    break;
+                }
                 View view = getChildAt(0);
-                if (isFingerScrollingUp(diffY)) {//向上滑动
-                    if (ViewCompat.canScrollVertically(view, -(int) diffY)) {
+                if (isFingerScrollingUp(dY)) {//向上滑动
+                    if (ViewCompat.canScrollVertically(view, -(int) dY)) {
                         Log.d(TAG, "子View还可以往下滚动");
                         mIsBeingDragged = false;
                     }else {
                         View lastView = getChildAt(getChildCount() - 1);
                         View scrollView = getCurrentScrollView(lastView);
                         if (lastView.getTop() == 0) {//当前页是最后一页
-                            if (ViewCompat.canScrollVertically(scrollView, -(int) diffY)) {//最后一页的内容是否能够向下滚动
+                            if (ViewCompat.canScrollVertically(scrollView, -(int) dY)) {//最后一页的内容是否能够向下滚动
                                 Log.d(TAG, "lastView可以往下滚动");
                                 mIsBeingDragged = false;
                                 break;
@@ -90,7 +100,7 @@ public class VerticalSlideLayout extends ViewGroup {
                         Log.d(TAG, "子View无法往下滚动");
                         mIsBeingDragged = true;
                     }
-                }else if (isFingerScrollingDown(diffY)){//向下滑动
+                }else if (isFingerScrollingDown(dY)){//向下滑动
                     //if (diffY > mTouchSlop) {
                         /*mInitialMotionY = mInitialDownY + mTouchSlop;
                         Log.d(TAG, "onInterceptTouchEvent: 满足事件拦截条件");
@@ -99,7 +109,7 @@ public class VerticalSlideLayout extends ViewGroup {
                         View lastView = getChildAt(getChildCount() - 1);
                         View scrollView = getCurrentScrollView(lastView);
                         if (lastView.getTop() == 0) {//当前页是最后一页
-                            if (ViewCompat.canScrollVertically(scrollView, -(int) diffY)){
+                            if (ViewCompat.canScrollVertically(scrollView, -(int) dY)){
                                 Log.d(TAG, "lastView已经滑动到顶部部了");
                                 mIsBeingDragged = false;
                             }else {

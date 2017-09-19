@@ -1,11 +1,13 @@
 package cn.rainbow.android.app.verticalslide;
 
+import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
             ViewGroup view = (ViewGroup) viewPager.getChildAt(i);
             Log.d("onCreate: ",view.toString());
         }
+
+        ItemTouchHelper g;
+        ItemTouchHelper.Callback l;
     }
 
     class MyAdapter extends FragmentStatePagerAdapter{
