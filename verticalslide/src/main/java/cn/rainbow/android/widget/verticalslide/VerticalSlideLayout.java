@@ -76,7 +76,8 @@ public class VerticalSlideLayout extends ViewGroup {
                 final float xDiff = Math.abs(currentX - mInitialDownX);
                 float dY = currentY - mInitialDownY;
                 float yDiff = Math.abs(dY);
-                if (xDiff * 0.5f > yDiff && xDiff > mTouchSlop) {//表示水平方向的滑动
+                Log.d(TAG, xDiff+", "+yDiff+","+mTouchSlop);
+                if (xDiff /** 0.5f*/ > yDiff /*&& xDiff > mTouchSlop*/) {//表示水平方向的滑动
                     Log.d(TAG, "水平方向滑动不拦截事件");
                     mIsBeingDragged = false;
                     break;
