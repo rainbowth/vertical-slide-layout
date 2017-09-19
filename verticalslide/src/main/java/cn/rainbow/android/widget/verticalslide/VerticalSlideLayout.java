@@ -84,7 +84,6 @@ public class VerticalSlideLayout extends ViewGroup {
                         }
                         //滑动到底部了，拦截子控件的事件，转由自己处理，去滚动到下一个View
                         Log.d(TAG, "子View无法往下滚动");
-                        Toast.makeText(getContext(), "已经滑动到底部了", Toast.LENGTH_SHORT).show();
                         mIsBeingDragged = true;
                     }
                 }else if (isFingerScrollingDown(diffY)){//向下滑动
