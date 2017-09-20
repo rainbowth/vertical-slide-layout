@@ -15,6 +15,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebViewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(BlankFragment.newInstance());
-        fragments.add(BlankFragment.newInstance());
+        fragments.add(WebFragment.newInstance("<div style=\\\"max-width:480px;margin:0 auto;\\\"><style type=\\\"text\\/css\\\">p {max-width:480px;} img {width: 100%;height:auto;} input {width: 100%;height:auto;}<\\/style><html dir=\\\"ltr\\\">\\n <head> \\n  <title><\\/title> \\n <\\/head> \\n <body> \\n  <p><img alt=\\\"\\\" width=\\\"730\\\" height=\\\"886\\\" src=\\\"http:\\/\\/img1.tianhong.cn\\/upload\\/2013\\/5\\/27\\/20130527052057463.jpg\\\"><img alt=\\\"\\\" width=\\\"730\\\" height=\\\"828\\\" src=\\\"http:\\/\\/img1.tianhong.cn\\/upload\\/2013\\/5\\/27\\/20130527052109388.jpg\\\"><\\/p> \\n  <p><input src=\\\"http:\\/\\/img1.tianhong.cn\\/upload\\/2013\\/5\\/27\\/17b19537cba94359a3e2e83063a81da9.jpg\\\" type=\\\"image\\\"><input src=\\\"http:\\/\\/img1.tianhong.cn\\/upload\\/2013\\/5\\/27\\/0d1c62c78d144dd28a0334a609ed3d6b.jpg\\\" type=\\\"image\\\"><\\/p>  \\n <\\/body>\\n<\\/html><\\/div>"));
+        fragments.add(WebFragment.newInstance("http://hlj.dev.rainbowcn.net/westore/goods/param?id=255281"));
 
         ViewPager bannel = (ViewPager) findViewById(R.id.vp_bannel);
 
