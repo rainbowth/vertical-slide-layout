@@ -141,6 +141,10 @@ public class VerticalSlideLayout extends ViewGroup {
         mLastScrolledView = lastScrolledView;
     }
 
+    public void setFirstScrolledViewId(int firstScrolledViewId) {
+        mFirstScrolledViewId = firstScrolledViewId;
+    }
+
     private View getCurrentScrollView(View parent) {
         if (parent instanceof ViewPager) {
             View firstView = ((ViewPager) parent).getChildAt(0);
