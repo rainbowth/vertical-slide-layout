@@ -29,6 +29,9 @@ public class VerticalSlideLayout extends ViewGroup {
     private int mFirstChildTop;
     private int mLastChildTop;
 
+    private View mFirstScrolledView;
+    private View mLastScrolledView;
+
     public VerticalSlideLayout(Context context) {
         this(context, null);
     }
@@ -82,15 +85,15 @@ public class VerticalSlideLayout extends ViewGroup {
                     mIsBeingDragged = false;
                     break;
                 }
-                View view = getChildAt(0);
                 if (isFingerScrollingUp(dY)) {//向上滑动
-                    if (ViewCompat.canScrollVertically(view, -(int) dY)) {
+                    View view = mFirstScrolledView;
+                    if (view != null && ViewCompat.canScrollVertically(view, -(int) dY)) {
                         Log.d(TAG, "子View还可以往下滚动");
                         mIsBeingDragged = false;
                     }else {
                         View lastView = getChildAt(getChildCount() - 1);
-                        View scrollView = getCurrentScrollView(lastView);
                         if (lastView.getTop() == 0) {//当前页是最后一页
+                            View scrollView = getCurrentScrollView(lastView);
                             if (ViewCompat.canScrollVertically(scrollView, -(int) dY)) {//最后一页的内容是否能够向下滚动
                                 Log.d(TAG, "lastView可以往下滚动");
                                 mIsBeingDragged = false;
@@ -126,6 +129,14 @@ public class VerticalSlideLayout extends ViewGroup {
                 break;
         }
         return mIsBeingDragged;
+    }
+
+    public void setFirstScrolledView(View firstScrolledView) {
+        mFirstScrolledView = firstScrolledView;
+    }
+
+    public void setLastScrolledView(View lastScrolledView) {
+        mLastScrolledView = lastScrolledView;
     }
 
     private View getCurrentScrollView(View parent) {
