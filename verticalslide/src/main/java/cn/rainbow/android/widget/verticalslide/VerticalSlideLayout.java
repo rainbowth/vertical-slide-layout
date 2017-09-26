@@ -31,6 +31,7 @@ public class VerticalSlideLayout extends ViewGroup {
 
     private View mFirstScrolledView;
     private View mLastScrolledView;
+    private int mFirstScrolledViewId;
 
     public VerticalSlideLayout(Context context) {
         this(context, null);
@@ -86,14 +87,15 @@ public class VerticalSlideLayout extends ViewGroup {
                     break;
                 }
                 if (isFingerScrollingUp(dY)) {//向上滑动
-                    View view = mFirstScrolledView;
+                    View view = getChildAt(0);
+                    if (mFirstScrolledViewId != 0) view = view.findViewById(mFirstScrolledViewId);
                     if (view != null && ViewCompat.canScrollVertically(view, -(int) dY)) {
                         Log.d(TAG, "子View还可以往下滚动");
                         mIsBeingDragged = false;
                     }else {
                         View lastView = getChildAt(getChildCount() - 1);
                         if (lastView.getTop() == 0) {//当前页是最后一页
-                            View scrollView = getCurrentScrollView(lastView);
+                            View scrollView = mLastScrolledView != null ? mLastScrolledView : getCurrentScrollView(lastView);
                             if (ViewCompat.canScrollVertically(scrollView, -(int) dY)) {//最后一页的内容是否能够向下滚动
                                 Log.d(TAG, "lastView可以往下滚动");
                                 mIsBeingDragged = false;
@@ -111,7 +113,7 @@ public class VerticalSlideLayout extends ViewGroup {
                         mIsBeingDragged = true;*/
 
                         View lastView = getChildAt(getChildCount() - 1);
-                        View scrollView = getCurrentScrollView(lastView);
+                        View scrollView = mLastScrolledView != null ? mLastScrolledView : getCurrentScrollView(lastView);
                         if (lastView.getTop() == 0) {//当前页是最后一页
                             if (ViewCompat.canScrollVertically(scrollView, -(int) dY)){
                                 Log.d(TAG, "lastView已经滑动到顶部部了");
@@ -193,6 +195,7 @@ public class VerticalSlideLayout extends ViewGroup {
                         break;
                     }
                     View view = getChildAt(0);//第一个View(当前View)
+                    if (mFirstScrolledViewId != 0) view = view.findViewById(mFirstScrolledViewId);
                     if (ViewCompat.canScrollVertically(view, -(int) mMovedOffset)){//是否能往上滚动
                         mFirstChildTop  = (int) (mMovedOffset-view.getMeasuredHeight());
                         requestLayout();
